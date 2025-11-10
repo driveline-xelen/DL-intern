@@ -1,0 +1,172 @@
+.dashboard {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.cardStats {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.statsNumber {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #10b981;
+}
+
+.statsLabel {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.pendingApprovals {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.approvalTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 120px 150px 1fr 120px 200px;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 120px 150px 1fr 120px 200px;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.tableRow:hover {
+  background-color: #f8f9fa;
+}
+
+.colDate,
+.colUser,
+.colTitle,
+.colAmount,
+.colAction {
+  font-size: 0.875rem;
+}
+
+.colAmount {
+  font-weight: 600;
+  color: #10b981;
+}
+
+.colAction {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.approveBtn,
+.rejectBtn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.approveBtn {
+  background-color: #10b981;
+  color: white;
+}
+
+.approveBtn:hover {
+  opacity: 0.9;
+}
+
+.rejectBtn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.rejectBtn:hover {
+  opacity: 0.9;
+}

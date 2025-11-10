@@ -1,0 +1,15 @@
+# MacOS
+.DS_Store
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
