@@ -10,14 +10,18 @@ export default function AccountantDashboard() {
         <h2 className={styles.pageTitle}>経理担当ダッシュボード</h2>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
+          <div
+            className={styles.card}
+            onClick={() => window.location.href = '/dashboard/accountant/approvals'}
+            style={{ cursor: 'pointer' }}
+          >
             <div className={styles.cardIcon}>📋</div>
             <h3 className={styles.cardTitle}>承認待ち申請</h3>
             <p className={styles.cardDescription}>
               承認が必要な経費申請を確認します
             </p>
             <div className={styles.cardStats}>
-              <span className={styles.statsNumber}>8</span>
+              <span className={styles.statsNumber}>-</span>
               <span className={styles.statsLabel}>件の申請</span>
             </div>
           </div>

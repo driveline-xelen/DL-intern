@@ -1,10 +1,10 @@
 package com.expense.app.service;
 
+import com.expense.app.dto.ExpenseItemResponse;
 import com.expense.app.dto.ExpenseRequest;
 import com.expense.app.dto.ExpenseResponse;
 import com.expense.app.model.Expense;
 import com.expense.app.model.ExpenseItem;
-import com.expense.app.model.User;
 import com.expense.app.repository.ExpenseRepository;
 import com.expense.app.repository.ExpenseItemRepository;
 import com.expense.app.repository.UserRepository;
@@ -31,11 +31,12 @@ public class ExpenseService {
 
     @Transactional
     public ExpenseResponse createExpense(Long userId, ExpenseRequest request) {
-        User user = userRepository.findById(userId)
+        // Verify user exists
+        userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Expense expense = new Expense();
-        expense.setUser(user);
+        expense.setUserId(userId);
         expense.setTitle(request.getTitle());
         expense.setDescription(request.getDescription());
 
@@ -62,7 +63,7 @@ public class ExpenseService {
         // Save expense item if provided
         if (request.getItem() != null) {
             ExpenseItem item = new ExpenseItem();
-            item.setExpense(savedExpense);
+            item.setExpenseId(savedExpense.getId());
             item.setDate(request.getItem().getDate());
             item.setCategory(request.getItem().getCategory());
             item.setDescription(request.getItem().getDescription());
@@ -79,7 +80,7 @@ public class ExpenseService {
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
 
-        if (!expense.getUser().getId().equals(userId)) {
+        if (!expense.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized to update this expense");
         }
 
@@ -106,7 +107,7 @@ public class ExpenseService {
 
             // Add new item
             ExpenseItem item = new ExpenseItem();
-            item.setExpense(expense);
+            item.setExpenseId(expenseId);
             item.setDate(request.getItem().getDate());
             item.setCategory(request.getItem().getCategory());
             item.setDescription(request.getItem().getDescription());
@@ -124,11 +125,30 @@ public class ExpenseService {
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
 
-        if (!expense.getUser().getId().equals(userId)) {
+        if (!expense.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized to view this expense");
         }
 
-        return ExpenseResponse.fromExpense(expense);
+        ExpenseResponse response = ExpenseResponse.fromExpense(expense);
+
+        // Add expense items
+        List<ExpenseItem> items = expenseItemRepository.findByExpenseId(expenseId);
+        response.setItems(items.stream()
+                .map(item -> {
+                    ExpenseItemResponse itemResponse = new ExpenseItemResponse();
+                    itemResponse.setId(item.getId());
+                    itemResponse.setDate(item.getDate());
+                    itemResponse.setCategory(item.getCategory());
+                    itemResponse.setDescription(item.getDescription());
+                    itemResponse.setAmount(item.getAmount());
+                    itemResponse.setReceiptUrl(item.getReceiptUrl());
+                    itemResponse.setCreatedAt(item.getCreatedAt());
+                    itemResponse.setUpdatedAt(item.getUpdatedAt());
+                    return itemResponse;
+                })
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     public List<ExpenseResponse> getUserExpenses(Long userId) {
@@ -157,7 +177,7 @@ public class ExpenseService {
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new RuntimeException("Expense not found"));
 
-        if (!expense.getUser().getId().equals(userId)) {
+        if (!expense.getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized to delete this expense");
         }
 

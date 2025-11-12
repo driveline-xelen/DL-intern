@@ -1,14 +1,17 @@
 package com.expense.app.repository;
 
 import com.expense.app.model.Expense;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
+public interface ExpenseRepository {
     List<Expense> findByUserIdOrderByCreatedAtDesc(Long userId);
     List<Expense> findByStatusOrderByCreatedAtDesc(String status);
     List<Expense> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, String status);
+    Expense save(Expense expense);
+    Optional<Expense> findById(Integer id);
+    List<Expense> findAll();
+    void delete(Expense expense);
+    void deleteById(Integer id);
 }

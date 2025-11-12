@@ -1,12 +1,16 @@
 package com.expense.app.repository;
 
 import com.expense.app.model.ExpenseItem;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface ExpenseItemRepository extends JpaRepository<ExpenseItem, Integer> {
+public interface ExpenseItemRepository {
     List<ExpenseItem> findByExpenseId(Integer expenseId);
+    ExpenseItem save(ExpenseItem item);
+    Optional<ExpenseItem> findById(Integer id);
+    List<ExpenseItem> findAll();
+    void delete(ExpenseItem item);
+    void deleteById(Integer id);
+    void deleteAll(List<ExpenseItem> items);
 }

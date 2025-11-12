@@ -14,6 +14,91 @@ Next.js、Spring Boot、PostgreSQLを使用した経費申請管理システム�
 - Docker Desktop がインストールされていること
 - Docker Compose が利用可能であること
 
+## 環境構築手順
+
+### パターン1: ZIPファイルから構築する場合
+
+1. **ZIPファイルの展開**
+   ```bash
+   # ZIPファイルを任意のディレクトリに展開
+   unzip expense-app.zip
+   cd expense-app
+   ```
+
+2. **Dockerコンテナの起動**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **起動確認**
+   ```bash
+   # コンテナの起動状態を確認
+   docker compose ps
+
+   # バックエンドのヘルスチェック
+   curl http://localhost:8080/api/health
+   ```
+
+4. **アプリケーションにアクセス**
+   - フロントエンド: http://localhost:3000
+   - バックエンドAPI: http://localhost:8080
+
+### パターン2: Gitリポジトリから構築する場合
+
+1. **リポジトリのクローン**
+   ```bash
+   # HTTPSでクローン
+   git clone https://github.com/your-organization/expense-app.git
+   cd expense-app
+
+   # または SSHでクローン
+   git clone git@github.com:your-organization/expense-app.git
+   cd expense-app
+   ```
+
+2. **Dockerコンテナの起動**
+   ```bash
+   docker compose up -d
+   ```
+
+3. **起動確認**
+   ```bash
+   # コンテナの起動状態を確認
+   docker-compose ps
+
+   # バックエンドのヘルスチェック
+   curl http://localhost:8080/api/health
+   ```
+
+4. **アプリケーションにアクセス**
+   - フロントエンド: http://localhost:3000
+   - バックエンドAPI: http://localhost:8080
+
+### トラブルシューティング
+
+**コンテナが起動しない場合**
+```bash
+# ログを確認
+docker-compose logs -f
+
+# コンテナを停止して再起動
+docker-compose down
+docker-compose up -d
+```
+
+**ポートが既に使用されている場合**
+- 3000番ポート（フロントエンド）、8080番ポート（バックエンド）、5432番ポート（PostgreSQL）が他のアプリケーションで使用されていないか確認してください
+- 使用中の場合は、該当するアプリケーションを停止するか、[docker-compose.yml](docker-compose.yml)のポート設定を変更してください
+
+**データベース接続エラーの場合**
+```bash
+# PostgreSQLコンテナのログを確認
+docker-compose logs postgres
+
+# データベースコンテナを再起動
+docker-compose restart postgres
+```
+
 ## セットアップと起動
 
 ### 1. Docker コンテナの起動
