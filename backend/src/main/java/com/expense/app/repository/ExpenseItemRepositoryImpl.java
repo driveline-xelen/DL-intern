@@ -27,7 +27,8 @@ public class ExpenseItemRepositoryImpl implements ExpenseItemRepository {
 
     @Override
     public List<ExpenseItem> findByExpenseId(Integer expenseId) {
-        String sql = "SELECT * FROM expense_items WHERE expense_id = ? ORDER BY date DESC";
+        String sql = "SELECT id, expense_id, date, category, description, amount, receipt_url, created_at, updated_at " +
+                     "FROM expense_items WHERE expense_id = ? ORDER BY date DESC";
         return jdbcTemplate.query(sql, expenseItemRowMapper, expenseId);
     }
 
@@ -80,7 +81,8 @@ public class ExpenseItemRepositoryImpl implements ExpenseItemRepository {
 
     @Override
     public Optional<ExpenseItem> findById(Integer id) {
-        String sql = "SELECT * FROM expense_items WHERE id = ?";
+        String sql = "SELECT id, expense_id, date, category, description, amount, receipt_url, created_at, updated_at " +
+                     "FROM expense_items WHERE id = ?";
         try {
             ExpenseItem item = jdbcTemplate.queryForObject(sql, expenseItemRowMapper, id);
             return Optional.ofNullable(item);
@@ -91,7 +93,8 @@ public class ExpenseItemRepositoryImpl implements ExpenseItemRepository {
 
     @Override
     public List<ExpenseItem> findAll() {
-        String sql = "SELECT * FROM expense_items ORDER BY created_at DESC";
+        String sql = "SELECT id, expense_id, date, category, description, amount, receipt_url, created_at, updated_at " +
+                     "FROM expense_items ORDER BY created_at DESC";
         return jdbcTemplate.query(sql, expenseItemRowMapper);
     }
 

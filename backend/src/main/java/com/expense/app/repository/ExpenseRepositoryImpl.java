@@ -27,7 +27,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> findByUserIdOrderByCreatedAtDesc(Long userId) {
-        String sql = "SELECT e.*, u.username, u.full_name as user_full_name, u.department as user_department " +
+        String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
                     "WHERE e.user_id = ? " +
@@ -37,7 +39,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> findByStatusOrderByCreatedAtDesc(String status) {
-        String sql = "SELECT e.*, u.username, u.full_name as user_full_name, u.department as user_department " +
+        String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
                     "WHERE e.status = ? " +
@@ -47,7 +51,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, String status) {
-        String sql = "SELECT e.*, u.username, u.full_name as user_full_name, u.department as user_department " +
+        String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
                     "WHERE e.user_id = ? AND e.status = ? " +
@@ -116,7 +122,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public Optional<Expense> findById(Integer id) {
-        String sql = "SELECT e.*, u.username, u.full_name as user_full_name, u.department as user_department, " +
+        String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "u.username, u.full_name as user_full_name, u.department as user_department, " +
                     "a.username as approver_username, a.full_name as approver_full_name " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
@@ -132,7 +140,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> findAll() {
-        String sql = "SELECT e.*, u.username, u.full_name as user_full_name, u.department as user_department " +
+        String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
                     "ORDER BY e.created_at DESC";

@@ -26,7 +26,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT id, username, password, email, full_name, department, role, created_at, updated_at " +
+                     "FROM users WHERE username = ?";
         try {
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, username);
             return Optional.ofNullable(user);
@@ -37,7 +38,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT id, username, password, email, full_name, department, role, created_at, updated_at " +
+                     "FROM users WHERE email = ?";
         try {
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, email);
             return Optional.ofNullable(user);
@@ -109,7 +111,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT id, username, password, email, full_name, department, role, created_at, updated_at " +
+                     "FROM users WHERE id = ?";
         try {
             User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
             return Optional.ofNullable(user);
@@ -120,7 +123,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT * FROM users ORDER BY created_at DESC";
+        String sql = "SELECT id, username, password, email, full_name, department, role, created_at, updated_at " +
+                     "FROM users ORDER BY created_at DESC";
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
