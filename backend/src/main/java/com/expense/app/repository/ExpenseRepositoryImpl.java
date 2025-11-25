@@ -28,7 +28,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> findByUserIdOrderByCreatedAtDesc(Long userId) {
         String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
-                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.rejection_reason, e.created_at, e.updated_at, " +
                     "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
@@ -40,7 +40,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> findByStatusOrderByCreatedAtDesc(String status) {
         String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
-                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.rejection_reason, e.created_at, e.updated_at, " +
                     "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
@@ -52,7 +52,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, String status) {
         String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
-                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.rejection_reason, e.created_at, e.updated_at, " +
                     "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +
@@ -68,8 +68,8 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         if (expense.getId() == null) {
             // Insert new expense
             String sql = "INSERT INTO expenses (user_id, title, description, total_amount, status, " +
-                        "submission_date, approval_date, approver_id, created_at, updated_at) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "submission_date, approval_date, approver_id, rejection_reason, created_at, updated_at) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -88,8 +88,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                     ps.setNull(8, java.sql.Types.BIGINT);
                 }
 
-                ps.setTimestamp(9, Timestamp.valueOf(now));
+                ps.setString(9, expense.getRejectionReason());
                 ps.setTimestamp(10, Timestamp.valueOf(now));
+                ps.setTimestamp(11, Timestamp.valueOf(now));
                 return ps;
             }, keyHolder);
 
@@ -99,7 +100,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         } else {
             // Update existing expense
             String sql = "UPDATE expenses SET user_id = ?, title = ?, description = ?, total_amount = ?, " +
-                        "status = ?, submission_date = ?, approval_date = ?, approver_id = ?, updated_at = ? " +
+                        "status = ?, submission_date = ?, approval_date = ?, approver_id = ?, rejection_reason = ?, updated_at = ? " +
                         "WHERE id = ?";
 
             jdbcTemplate.update(sql,
@@ -111,6 +112,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 expense.getSubmissionDate() != null ? Date.valueOf(expense.getSubmissionDate()) : null,
                 expense.getApprovalDate() != null ? Date.valueOf(expense.getApprovalDate()) : null,
                 expense.getApproverId(),
+                expense.getRejectionReason(),
                 Timestamp.valueOf(now),
                 expense.getId()
             );
@@ -123,7 +125,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public Optional<Expense> findById(Integer id) {
         String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
-                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.rejection_reason, e.created_at, e.updated_at, " +
                     "u.username, u.full_name as user_full_name, u.department as user_department, " +
                     "a.username as approver_username, a.full_name as approver_full_name " +
                     "FROM expenses e " +
@@ -141,7 +143,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> findAll() {
         String sql = "SELECT e.id, e.user_id, e.title, e.description, e.total_amount, e.status, " +
-                    "e.submission_date, e.approval_date, e.approver_id, e.created_at, e.updated_at, " +
+                    "e.submission_date, e.approval_date, e.approver_id, e.rejection_reason, e.created_at, e.updated_at, " +
                     "u.username, u.full_name as user_full_name, u.department as user_department " +
                     "FROM expenses e " +
                     "JOIN users u ON e.user_id = u.id " +

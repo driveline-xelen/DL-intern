@@ -29,6 +29,8 @@ public class ExpenseRowMapper implements RowMapper<Expense> {
             expense.setApproverId(rs.getLong("approver_id"));
         }
 
+        expense.setRejectionReason(rs.getString("rejection_reason"));
+
         expense.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
         if (rs.getTimestamp("updated_at") != null) {

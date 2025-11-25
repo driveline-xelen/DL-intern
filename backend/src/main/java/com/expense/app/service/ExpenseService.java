@@ -168,8 +168,83 @@ public class ExpenseService {
     public List<ExpenseResponse> getPendingExpenses() {
         List<Expense> expenses = expenseRepository.findByStatusOrderByCreatedAtDesc("pending");
         return expenses.stream()
-                .map(ExpenseResponse::fromExpense)
+                .map(expense -> {
+                    ExpenseResponse response = ExpenseResponse.fromExpense(expense);
+                    // Add expense items
+                    List<ExpenseItem> items = expenseItemRepository.findByExpenseId(expense.getId());
+                    response.setItems(items.stream()
+                            .map(ExpenseItemResponse::fromExpenseItem)
+                            .collect(Collectors.toList()));
+                    return response;
+                })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ExpenseResponse approveExpense(Integer expenseId, Long approverId) {
+        // Get expense
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+
+        // Check status
+        if (!"pending".equals(expense.getStatus())) {
+            throw new RuntimeException("この申請は既に処理済みです");
+        }
+
+        // Update expense
+        expense.setStatus("approved");
+        expense.setApprovalDate(LocalDate.now());
+        expense.setApproverId(approverId);
+
+        expenseRepository.save(expense);
+
+        // Get updated expense with user details
+        Expense updatedExpense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+
+        ExpenseResponse response = ExpenseResponse.fromExpense(updatedExpense);
+
+        // Add expense items
+        List<ExpenseItem> items = expenseItemRepository.findByExpenseId(expenseId);
+        response.setItems(items.stream()
+                .map(ExpenseItemResponse::fromExpenseItem)
+                .collect(Collectors.toList()));
+
+        return response;
+    }
+
+    @Transactional
+    public ExpenseResponse rejectExpense(Integer expenseId, Long approverId, String reason) {
+        // Get expense
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+
+        // Check status
+        if (!"pending".equals(expense.getStatus())) {
+            throw new RuntimeException("この申請は既に処理済みです");
+        }
+
+        // Update expense
+        expense.setStatus("rejected");
+        expense.setApprovalDate(LocalDate.now());
+        expense.setApproverId(approverId);
+        expense.setRejectionReason(reason);
+
+        expenseRepository.save(expense);
+
+        // Get updated expense with user details
+        Expense updatedExpense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+
+        ExpenseResponse response = ExpenseResponse.fromExpense(updatedExpense);
+
+        // Add expense items
+        List<ExpenseItem> items = expenseItemRepository.findByExpenseId(expenseId);
+        response.setItems(items.stream()
+                .map(ExpenseItemResponse::fromExpenseItem)
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     @Transactional

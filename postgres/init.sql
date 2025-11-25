@@ -29,6 +29,7 @@ CREATE TABLE expenses (
     submission_date DATE,
     approval_date DATE,
     approver_id INTEGER REFERENCES users(id),
+    rejection_reason TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -59,14 +60,16 @@ INSERT INTO users (username, password, email, full_name, department, role) VALUE
 ('employee1', 'password123', 'employee1@example.com', '山田 次郎', '営業部', 'employee'),
 ('employee2', 'password123', 'employee2@example.com', '佐藤 三郎', '開発部', 'employee');
 
-INSERT INTO expenses (user_id, title, description, total_amount, status) VALUES
-(3, '出張費用', '東京出張に伴う交通費・宿泊費', 35000.00, 'submitted'),
-(4, '備品購入', 'オフィス用品の購入', 8500.00, 'draft');
+INSERT INTO expenses (user_id, title, description, total_amount, status, submission_date) VALUES
+(3, '東京出張費用', '新規顧客訪問のための出張費用', 35000.00, 'pending', '2025-01-15'),
+(4, '備品購入', 'オフィス用品の購入', 8500.00, 'pending', '2025-01-20'),
+(3, '会議費用', 'クライアントとの会食', 12000.00, 'draft', NULL);
 
 INSERT INTO expense_items (expense_id, date, category, description, amount) VALUES
 (1, '2025-01-15', '交通費', '新幹線往復チケット', 28000.00),
 (1, '2025-01-15', '宿泊費', 'ホテル宿泊費', 7000.00),
-(2, '2025-01-20', '備品', 'ボールペン・ノート等', 8500.00);
+(2, '2025-01-20', '備品', 'ボールペン・ノート等', 8500.00),
+(3, '2025-01-22', '会議費', 'クライアント会食費', 12000.00);
 
 -- ビューの作成（経費申請一覧用）
 CREATE OR REPLACE VIEW expense_summary AS

@@ -20,6 +20,7 @@ public class Expense {
     private LocalDate submissionDate;
     private LocalDate approvalDate;
     private Long approverId;
+    private String rejectionReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

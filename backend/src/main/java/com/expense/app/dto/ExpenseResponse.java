@@ -26,6 +26,7 @@ public class ExpenseResponse {
     private LocalDate approvalDate;
     private Long approverId;
     private String approverName;
+    private String rejectionReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<ExpenseItemResponse> items;
@@ -46,6 +47,7 @@ public class ExpenseResponse {
             response.setApproverId(expense.getApproverId());
             response.setApproverName(expense.getApproverFullName());
         }
+        response.setRejectionReason(expense.getRejectionReason());
         response.setCreatedAt(expense.getCreatedAt());
         response.setUpdatedAt(expense.getUpdatedAt());
         return response;

@@ -94,6 +94,44 @@ public class ExpenseController {
         }
     }
 
+    @PutMapping("/{expenseId}/approve")
+    public ResponseEntity<?> approveExpense(
+            @PathVariable Integer expenseId,
+            @RequestHeader("X-User-Id") Long approverId) {
+        try {
+            ExpenseResponse response = expenseService.approveExpense(expenseId, approverId);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", e.getMessage());
+
+            if (e.getMessage().equals("Expense not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
+    @PutMapping("/{expenseId}/reject")
+    public ResponseEntity<?> rejectExpense(
+            @PathVariable Integer expenseId,
+            @RequestHeader("X-User-Id") Long approverId,
+            @RequestBody(required = false) Map<String, String> body) {
+        try {
+            String reason = body != null ? body.get("reason") : null;
+            ExpenseResponse response = expenseService.rejectExpense(expenseId, approverId, reason);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", e.getMessage());
+
+            if (e.getMessage().equals("Expense not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<?> deleteExpense(
             @PathVariable Integer expenseId,
