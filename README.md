@@ -322,3 +322,45 @@ pgAdminを使用してデータベースの管理やSQLクエリの実行がで�
 ```
 
 **注意**: [docker-compose.yml](docker-compose.yml) は互換性のために残していますが、使用は推奨しません。必ずお使いのCPUアーキテクチャに合った compose ファイルを使用してください。
+
+---
+
+## 課題：承認・却下機能の実装
+
+このプロジェクトには、経理担当者が経費申請を承認・却下する機能の**フロントエンド画面は実装済み**ですが、**バックエンドAPIが未実装**です。
+
+### 課題内容
+
+以下の3つのAPIエンドポイントを実装してください：
+
+1. **承認待ち経費申請一覧取得**: `GET /api/expenses/pending`
+2. **経費申請承認**: `PUT /api/expenses/{expenseId}/approve`
+3. **経費申請却下**: `PUT /api/expenses/{expenseId}/reject`
+
+### 詳細な仕様
+
+詳しいAPI仕様、実装のヒント、チェックリストは以下のドキュメントを参照してください：
+
+**[API仕様書 (docs/API_SPECIFICATION.md)](docs/API_SPECIFICATION.md)**
+
+### 動作確認方法
+
+1. 経理担当者アカウントでログイン
+   - URL: http://localhost:3000
+   - ユーザー名: `accountant`
+   - パスワード: `password123`
+
+2. ダッシュボードの「承認待ち申請」カードをクリック
+
+3. 承認待ち一覧ページで承認/却下ボタンをクリック
+
+APIを実装すると、これらの画面が正常に動作します。
+
+### 実装が必要なファイル
+
+- `backend/src/main/java/com/expense/app/controller/ExpenseController.java`
+- `backend/src/main/java/com/expense/app/service/ExpenseService.java`
+- `backend/src/main/java/com/expense/app/repository/ExpenseRepository.java`
+- `backend/src/main/java/com/expense/app/model/Expense.java`
+- `backend/src/main/java/com/expense/app/dto/ExpenseResponse.java`
+- `postgres/init.sql` (rejection_reasonカラムの追加)
